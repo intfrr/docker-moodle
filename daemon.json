@@ -1,0 +1,6 @@
+/*https://bugzilla.redhat.com/show_bug.cgi?id=1448384"*/
+{
+  "debug" : true,
+  "experimental" : true,
+  "exec-opts": ["native.cgroupdriver=cgroupfs"]
+}

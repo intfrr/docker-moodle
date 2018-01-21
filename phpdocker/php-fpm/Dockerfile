@@ -1,17 +1,19 @@
-FROM phpdockerio/php56-fpm:latest
+FROM phpdockerio/php71-fpm:latest
 
 # Install selected extensions and other stuff
 RUN apt-get update \
     && apt-get -y --no-install-recommends install \
-    php5-intl \
-    php5-gd \
-    php5-xsl \
-    php5-gd \
-    php5-memcached \
-    php5-mysql \
-    php5-redis \
-    php5-xdebug \
-    php5-xmlrpc \
+    php7.1-intl \
+    php7.1-gd \
+    php7.1-xsl \
+    php7.1-gd \
+    php7.1-memcached \
+    php7.1-mysql \
+    php7.1-redis \
+    php7.1-xdebug \
+    php7.1-xmlrpc \
+    php7.1-mbstring \
+    php7.1-soap \
     locales \
     clamav \
     clamav-daemon \
@@ -31,4 +33,4 @@ RUN apt-get update \
 WORKDIR "/application"
 
 CMD freshclam -d \
-    & /usr/sbin/php5-fpm -F -O 2>&1 | sed -u 's,.*: \"\(.*\)$,\1,'| sed -u 's,"$,,' 1>&1
+    & /usr/sbin/php-fpm7.1 -F -O 2>&1 | sed -u 's,.*: \"\(.*\)$,\1,'| sed -u 's,"$,,' 1>&1

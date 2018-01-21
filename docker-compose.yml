@@ -1,13 +1,16 @@
-version: "3.1"
+version: "2.0"
 services:
-
     memcached:
       image: memcached:alpine
       container_name: moodle-memcached
+      ports:
+       - "11211:11211"
 
     redis:
       image: redis:alpine
       container_name: moodle-redis
+      ports:
+       - "6379:6379"
 
     mysql:
       image: mysql:5.7
@@ -26,13 +29,32 @@ services:
       container_name: moodle-webserver
       working_dir: /application
       volumes:
-          - .:/application
+          - ./moodledata:/application/moodledata/
+          - ./public/moodle:/application/public/moodle
           - ./phpdocker/nginx/common.include.conf:/etc/nginx/common.include.conf
-          - ./phpdocker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-          - ./phpdocker/nginx/ssl.conf:/etc/nginx/conf.d/ssl.conf
+          - ./phpdocker/nginx/nginx1.conf:/etc/nginx/conf.d/default.conf
+          - ./phpdocker/nginx/ssl1.conf:/etc/nginx/conf.d/ssl.conf
       ports:
-       - "8080:8080"
-       - "443:443"
+       - "0.0.0.0:8080:8080"
+       - "0.0.0.0:443:443"
+      links:
+       - php-fpm
+
+    webserver-2:
+      build:
+        context: .
+        dockerfile: phpdocker/nginx/Dockerfile
+      container_name: moodle-webserver-2
+      working_dir: /application
+      volumes:
+          - ./moodledata:/application/moodledata
+          - ./public/moodle2:/application/public/moodle2
+          - ./phpdocker/nginx/common.include.conf:/etc/nginx/common.include.conf
+          - ./phpdocker/nginx/nginx2.conf:/etc/nginx/conf.d/default.conf
+          - ./phpdocker/nginx/ssl2.conf:/etc/nginx/conf.d/ssl.conf
+      ports:
+       - "0.0.0.0:8181:8181"
+       - "0.0.0.0:444:444"
       links:
        - php-fpm
 
@@ -44,9 +66,12 @@ services:
       working_dir: /application
       volumes:
         - .:/application
-        - ./phpdocker/php-fpm/php-ini-overrides.ini:/etc/php5/fpm/conf.d/99-overrides.ini
+        - ./phpdocker/php-fpm/www.conf:/etc/php/7.1/fpm/pool.d/www.conf
+        - ./phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/7.1/fpm/conf.d/99-overrides.ini
         - ./phpdocker/php-fpm/clamd.conf:/etc/clamav/clamd.conf
         - ./phpdocker/php-fpm/freshclam.conf:/etc/clamav/freshclam.conf
+      ports:
+       - "0.0.0.0:9000:9000"
       links:
         - memcached
         - mysql
