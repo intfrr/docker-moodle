@@ -105,8 +105,6 @@ Redis|redis|6379
 
 * Configucación docker-sync para máquinas osx
 * Configuración behat
-* Configuración memchaced
-* Configuración redis
 
 ## Créditos
 
