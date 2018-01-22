@@ -39,6 +39,7 @@ services:
        - "0.0.0.0:443:443"
       links:
        - php-fpm
+      command: [nginx-debug, '-g', 'daemon off;']
 
     webserver-2:
       build:
@@ -57,6 +58,8 @@ services:
        - "0.0.0.0:444:444"
       links:
        - php-fpm
+      command: [nginx-debug, '-g', 'daemon off;']
+
 
     php-fpm:
       build:
